@@ -1,0 +1,3 @@
+====== RMS SCAFFOLD COMMAND =========
+
+dotnet ef dbcontext scaffold "Host=localhost;Port=5432;Database=RMS;Username=postgres;Password=Sendrock@1" Npgsql.EntityFrameworkCore.PostgreSQL --project RMS.Infrastructure --startup-project RMS.API --context AppDbContext --context-dir Persistence --output-dir Persistence/Models --force
