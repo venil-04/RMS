@@ -8,4 +8,6 @@ public partial class Orderitemstatus
     public int Orderitemstatusid { get; set; }
 
     public string Statusname { get; set; } = null!;
+
+    public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
 }

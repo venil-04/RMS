@@ -8,4 +8,6 @@ public partial class Billstatus
     public int Billstatusid { get; set; }
 
     public string Statusname { get; set; } = null!;
+
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 }

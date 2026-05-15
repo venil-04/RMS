@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace RMS.Infrastructure.Persistence.Models;
 
-public partial class Menucategory
+public partial class Ingredient
 {
-    public int Categoryid { get; set; }
+    public int Ingredientid { get; set; }
 
     public int Restaurantid { get; set; }
 
-    public string Categoryname { get; set; } = null!;
+    public int Unitid { get; set; }
 
-    public string? Description { get; set; }
+    public string Ingredientname { get; set; } = null!;
 
-    public int Displayorder { get; set; }
+    public decimal? Minimumstocklevel { get; set; }
 
     public bool Isactive { get; set; }
 
@@ -23,13 +23,11 @@ public partial class Menucategory
 
     public DateTime? Updatedat { get; set; }
 
-    public DateTime? Deletedat { get; set; }
-
     public int? Createdby { get; set; }
 
     public int? Updatedby { get; set; }
 
-    public virtual ICollection<Menuitem> Menuitems { get; set; } = new List<Menuitem>();
-
     public virtual Restaurant Restaurant { get; set; } = null!;
+
+    public virtual Unit Unit { get; set; } = null!;
 }

@@ -33,6 +33,16 @@ public partial class User
 
     public int? Updatedby { get; set; }
 
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+
+    public virtual ICollection<Order> OrderClosedbyNavigations { get; set; } = new List<Order>();
+
+    public virtual ICollection<Order> OrderOpenedbyNavigations { get; set; } = new List<Order>();
+
+    public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
+
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
     public virtual Restaurant Restaurant { get; set; } = null!;
 
     public virtual Role Role { get; set; } = null!;

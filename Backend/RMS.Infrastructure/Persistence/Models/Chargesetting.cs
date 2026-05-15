@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace RMS.Infrastructure.Persistence.Models;
 
-public partial class Menucategory
+public partial class Chargesetting
 {
-    public int Categoryid { get; set; }
+    public int Chargesettingid { get; set; }
 
     public int Restaurantid { get; set; }
 
-    public string Categoryname { get; set; } = null!;
+    public string Chargename { get; set; } = null!;
 
-    public string? Description { get; set; }
+    public decimal Chargevalue { get; set; }
 
-    public int Displayorder { get; set; }
+    public bool Ispercentage { get; set; }
 
     public bool Isactive { get; set; }
 
@@ -23,13 +23,9 @@ public partial class Menucategory
 
     public DateTime? Updatedat { get; set; }
 
-    public DateTime? Deletedat { get; set; }
-
     public int? Createdby { get; set; }
 
     public int? Updatedby { get; set; }
-
-    public virtual ICollection<Menuitem> Menuitems { get; set; } = new List<Menuitem>();
 
     public virtual Restaurant Restaurant { get; set; } = null!;
 }
