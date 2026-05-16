@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RMS.Infrastructure.Persistence.Models;
+namespace RMS.Domain.Entities;
 
 public partial class Restaurant
 {
-    public int Restaurantid { get; set; }
+    public int RestaurantId { get; set; }
 
-    public string Restaurantname { get; set; } = null!;
+    public string RestaurantName { get; set; } = null!;
 
     public string? Email { get; set; }
 
-    public string? Mobilenumber { get; set; }
+    public string? MobileNumber { get; set; }
 
-    public bool Isactive { get; set; }
+    public bool IsActive { get; set; }
 
-    public bool Isdeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public string? Address { get; set; }
 
@@ -23,13 +23,13 @@ public partial class Restaurant
 
     public string? State { get; set; }
 
-    public DateTime Createdat { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime? Updatedat { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public int? Createdby { get; set; }
+    public int? CreatedBy { get; set; }
 
-    public int? Updatedby { get; set; }
+    public int? UpdatedBy { get; set; }
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RMS.Infrastructure.Persistence.Models;
+namespace RMS.Domain.Entities;
 
 public partial class Paymentmethod
 {
-    public int Paymentmethodid { get; set; }
+    public int PaymentMethodId { get; set; }
 
-    public string Methodname { get; set; } = null!;
+    public string MethodName { get; set; } = null!;
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

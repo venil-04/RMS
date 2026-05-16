@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RMS.Infrastructure.Persistence.Models;
+namespace RMS.Domain.Entities;
 
 public partial class Unit
 {
-    public int Unitid { get; set; }
+    public int UnitId { get; set; }
 
-    public string Unitname { get; set; } = null!;
+    public string UnitName { get; set; } = null!;
 
     public virtual ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 }

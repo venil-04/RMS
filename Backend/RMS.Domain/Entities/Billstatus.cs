@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RMS.Infrastructure.Persistence.Models;
+namespace RMS.Domain.Entities;
 
 public partial class Billstatus
 {
-    public int Billstatusid { get; set; }
+    public int BillStatusId { get; set; }
 
-    public string Statusname { get; set; } = null!;
+    public string StatusName { get; set; } = null!;
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 }

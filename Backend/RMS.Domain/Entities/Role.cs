@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RMS.Infrastructure.Persistence.Models;
+namespace RMS.Domain.Entities;
 
 public partial class Role
 {
-    public int Roleid { get; set; }
+    public int RoleId { get; set; }
 
-    public string Rolename { get; set; } = null!;
+    public string RoleName { get; set; } = null!;
 
     public virtual ICollection<Rolepermission> Rolepermissions { get; set; } = new List<Rolepermission>();
 

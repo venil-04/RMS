@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RMS.Infrastructure.Persistence.Models;
+namespace RMS.Domain.Entities;
 
 public partial class Orderitemstatus
 {
-    public int Orderitemstatusid { get; set; }
+    public int OrderItemStatusId { get; set; }
 
-    public string Statusname { get; set; } = null!;
+    public string StatusName { get; set; } = null!;
 
     public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
 }
