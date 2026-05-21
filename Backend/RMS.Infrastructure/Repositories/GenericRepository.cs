@@ -55,4 +55,45 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<T?> FirstOrDefaultWithIncludeAsync(
+        Expression<Func<T, bool>> predicate,
+        params Expression<Func<T, object>>[] includes)
+    {
+        IQueryable<T> query = _dbSet;
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        return await query.FirstOrDefaultAsync(predicate);
+    }
+    
+    public IQueryable<T> Query()
+    {
+        return _dbSet.AsQueryable();
+    }
+    
+    public IQueryable<T> Query(bool asNoTracking = true)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (asNoTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        return query;
+    }
+    
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.FirstOrDefaultAsync(predicate);
+    }
+    
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.AnyAsync(predicate);
+    }
 }
