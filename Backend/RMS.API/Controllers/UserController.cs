@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RMS.Application.Constants;
 using RMS.Application.Interfaces;
 using RMS.Application.Models.Auth;
+using RMS.Application.Models.Users;
 
 namespace RMS.API.Controllers;
 
@@ -17,9 +18,9 @@ public class UserController : BaseController
         _userService = userService;
     }
     
-    [HttpPost("createUser")]
+    [HttpPost("upsertUser")]
     [Authorize(policy : Permission.Users.Upsert)]
-    public async Task<IActionResult> CreateUser(UpsertUserRequest request)
+    public async Task<IActionResult> UpsertUser(UpsertUserRequest request)
     {
         var result = await _userService.UpsertUserAsync(request);
 
@@ -29,5 +30,13 @@ public class UserController : BaseController
         }
 
         return OkResponse(result, "System user created successfully.");
+    }
+    
+    [HttpPost("getUsers")]
+    [Authorize(Policy = Permission.Users.View)]
+    public async Task<IActionResult> GetUsers(GetUsersRequest request)
+    {
+        var result = await _userService.GetUsersAsync(request);
+        return OkResponse(result);
     }
 }

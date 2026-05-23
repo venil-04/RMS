@@ -10,6 +10,8 @@ public class UpsertUserRequest
 
     public string Email { get; set; } = string.Empty;
     public string? MobileNumber { get; set; }
+    
+    public bool? IsActive { get; set; }
 
     public string Password { get; set; } = string.Empty;
 }
