@@ -1,30 +1,23 @@
-import { Box, AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { type RootState } from '../../store';
-import { logout } from '../../features/auth/authSlice';
+import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import { Sidebar } from './Sidebar';
+import { Header } from './Header';
 
 export const MainLayout = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.auth.user);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
-  };
-
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#f4f6f8' }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            DineMaster Pro {user?.roleName ? `- ${user.roleName}` : ''}
-          </Typography>
-          <Button color="inherit" onClick={handleLogout}>Logout</Button>
-        </Toolbar>
-      </AppBar>
-      <Box sx={{ p: 3, flexGrow: 1 }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fbf9f9' }}>
+      <Header />
+      <Sidebar />
+      <Box 
+        component="main" 
+        sx={{ 
+          flexGrow: 1, 
+          p: { xs: 2, md: 3 }, 
+          mt: '56px',
+          width: { md: `calc(100% - 240px)` },
+          overflowX: 'hidden'
+        }}
+      >
         <Outlet />
       </Box>
     </Box>

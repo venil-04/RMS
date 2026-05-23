@@ -8,8 +8,7 @@ export interface User {
   restaurantId: number;
   roleId: number;
   roleName: string;
-  firstName: string;
-  lastName?: string;
+  fullName: string;
   email: string;
 }
 

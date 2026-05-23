@@ -48,19 +48,29 @@ const proServeThemeOptions: ThemeOptions = {
       fontWeight: 600,
       lineHeight: '32px',
     },
+    h5: {
+      fontSize: '20px',
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: '16px',
+      fontWeight: 600,
+    },
     body1: {
-      fontSize: '18px',
+      fontSize: '14px',
       fontWeight: 400,
-      lineHeight: '28px',
     },
     body2: {
-      fontSize: '16px',
+      fontSize: '12px',
       fontWeight: 400,
-      lineHeight: '24px',
     },
     button: {
+      fontSize: '14px',
       textTransform: 'none',
       fontWeight: 600,
+    },
+    caption: {
+      fontSize: '10px',
     },
   },
   shape: {
@@ -72,7 +82,7 @@ const proServeThemeOptions: ThemeOptions = {
         root: {
           borderRadius: 8,
           boxShadow: 'none',
-          padding: '10px 24px',
+          padding: '8px 16px',
           '&:hover': {
             boxShadow: 'none',
           },
@@ -81,11 +91,21 @@ const proServeThemeOptions: ThemeOptions = {
     },
     MuiInputBase: {
       styleOverrides: {
+        root: {
+          fontSize: '14px', // TextField inputs
+        },
         input: {
           '&:-webkit-autofill': {
             WebkitBoxShadow: '0 0 0 100px #ffffff inset',
             WebkitTextFillColor: '#1b1c1c',
           },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: '12px',
         },
       },
     },
@@ -115,6 +135,50 @@ const proServeThemeOptions: ThemeOptions = {
           borderRadius: 16,
           boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
           border: '1px solid #efeded',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          fontSize: '12px',
+          padding: '8px 16px', // Compact table row height
+        },
+        head: {
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          fontSize: '16px',
+          fontWeight: 600,
+          padding: '16px 24px',
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          fontSize: '14px',
+          padding: '24px',
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          padding: '16px 24px',
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          fontSize: '10px',
+          height: '24px',
+          fontWeight: 500,
         },
       },
     },
