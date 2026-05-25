@@ -10,15 +10,26 @@ export interface UserFormValues {
   isActive?: boolean;
 }
 
-export interface UpsertUserRequest {
-  userId?: number;
+export interface CreateUserRequest {
   restaurantId: number;
   roleId: number;
   firstName: string;
   lastName?: string | null;
   email: string;
   mobileNumber?: string | null;
+  isActive?: boolean;
   password?: string;
+}
+
+export interface UpdateUserRequest {
+  userId: number;
+  restaurantId: number;
+  roleId: number;
+  firstName: string;
+  lastName?: string | null;
+  email: string;
+  mobileNumber?: string | null;
+  isActive?: boolean;
 }
 
 export interface RoleOption {

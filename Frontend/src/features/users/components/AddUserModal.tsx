@@ -7,8 +7,8 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../store';
-import type { UserFormValues, UpsertUserRequest, RoleOption, UserListItemResponse } from '../types/userTypes';
-import { upsertUser } from '../services/userService';
+import type { UserFormValues, CreateUserRequest, UpdateUserRequest, RoleOption, UserListItemResponse } from '../types/userTypes';
+import { createUser, updateUser } from '../services/userService';
 
 interface AddUserModalProps {
   open: boolean;
@@ -111,23 +111,31 @@ export const AddUserModal = ({ open, onClose, onUserAdded, user, roles }: AddUse
     try {
       const restaurantId = authUser?.restaurantId || 1;
 
-      const request: UpsertUserRequest = {
-        userId: formValues.userId,
-        restaurantId,
-        roleId: formValues.roleId as number,
-        firstName: formValues.firstName.trim(),
-        lastName: formValues.lastName?.trim() || null,
-        email: formValues.email.trim(),
-        mobileNumber: formValues.mobileNumber?.trim() || null,
-      };
-
-      if (!isEditMode) {
-        request.password = formValues.password;
+      if (isEditMode) {
+        const request: UpdateUserRequest = {
+          userId: formValues.userId as number,
+          restaurantId,
+          roleId: formValues.roleId as number,
+          firstName: formValues.firstName.trim(),
+          lastName: formValues.lastName?.trim() || null,
+          email: formValues.email.trim(),
+          mobileNumber: formValues.mobileNumber?.trim() || null,
+          isActive: formValues.isActive
+        };
+        await updateUser(request);
       } else {
-        (request as any).isActive = formValues.isActive;
+        const request: CreateUserRequest = {
+          restaurantId,
+          roleId: formValues.roleId as number,
+          firstName: formValues.firstName.trim(),
+          lastName: formValues.lastName?.trim() || null,
+          email: formValues.email.trim(),
+          mobileNumber: formValues.mobileNumber?.trim() || null,
+          isActive: true, // Always true for newly created users
+          password: formValues.password
+        };
+        await createUser(request);
       }
-
-      await upsertUser(request);
 
       setSuccessMsg(`User ${isEditMode ? 'updated' : 'created'} successfully`);
       setTimeout(() => {
@@ -271,6 +279,7 @@ export const AddUserModal = ({ open, onClose, onUserAdded, user, roles }: AddUse
                     fullWidth
                     size="small"
                     type="password"
+                    autoComplete="new-password"
                     value={formValues.password}
                     onChange={(e) => handleChange('password', e.target.value)}
                     sx={{ bgcolor: '#fbf9f9', borderRadius: 2 }}
@@ -284,6 +293,7 @@ export const AddUserModal = ({ open, onClose, onUserAdded, user, roles }: AddUse
                     fullWidth
                     size="small"
                     type="password"
+                    autoComplete="new-password"
                     value={formValues.confirmPassword}
                     onChange={(e) => handleChange('confirmPassword', e.target.value)}
                     error={!!error && formValues.password !== formValues.confirmPassword}
