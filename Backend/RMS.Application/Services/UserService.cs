@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using RMS.Application.Exceptions;
 using RMS.Application.Interfaces;
 using RMS.Application.Models.Auth;
 using RMS.Application.Models.Users;
@@ -12,111 +14,20 @@ public class UserService : IUserService
     private readonly IGenericRepository<Role> _roleRepository;
     private readonly IGenericRepository<Restaurant> _restaurantRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IMapper _mapper;
     
     public UserService(
         IGenericRepository<User> userRepository,
         IGenericRepository<Role> roleRepository,
         IGenericRepository<Restaurant> restaurantRepository,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        IMapper mapper)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _restaurantRepository = restaurantRepository;
         _passwordHasher = passwordHasher;
-    }
-    
-    public async Task<UserResponse?> UpsertUserAsync(UpsertUserRequest request)
-    {
-        var email = request.Email.Trim().ToLower();
-
-        if (string.IsNullOrWhiteSpace(email))
-            return null;
-
-        if (string.IsNullOrWhiteSpace(request.FirstName))
-            return null;
-
-        var restaurantExists = await _restaurantRepository.AnyAsync(x =>
-            x.RestaurantId == request.RestaurantId &&
-            x.IsActive == true &&
-            x.IsDeleted == false);
-
-        if (!restaurantExists)
-            return null;
-
-        var roleExists = await _roleRepository.AnyAsync(x =>
-            x.RoleId == request.RoleId);
-
-        if (!roleExists)
-            return null;
-
-        var user = await _userRepository
-            .FirstOrDefaultAsync(x =>
-                x.Email == email &&
-                x.IsDeleted == false);
-
-        if (user == null)
-        {
-            if (string.IsNullOrWhiteSpace(request.Password))
-                return null;
-
-            user = new User
-            {
-                RestaurantId = request.RestaurantId,
-                RoleId = request.RoleId,
-
-                FirstName = request.FirstName.Trim(),
-                LastName = request.LastName?.Trim(),
-
-                Email = email,
-                MobileNumber = request.MobileNumber?.Trim(),
-
-                IsActive = true,
-                IsDeleted = false,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            user.PasswordHash = _passwordHasher.HashPassword(request.Password);
-
-            await _userRepository.AddAsync(user);
-        }
-        else
-        {
-            user.RestaurantId = request.RestaurantId;
-            user.RoleId = request.RoleId;
-
-            user.FirstName = request.FirstName.Trim();
-            user.LastName = request.LastName?.Trim();
-
-            user.MobileNumber = request.MobileNumber?.Trim();
-
-            user.IsActive = request.IsActive.GetValueOrDefault();
-
-            if (!string.IsNullOrWhiteSpace(request.Password))
-            {
-                user.PasswordHash = _passwordHasher.HashPassword(request.Password);
-            }
-
-            _userRepository.Update(user);
-        }
-
-        await _userRepository.SaveChangesAsync();
-
-        return new UserResponse
-        {
-            UserId = user.UserId,
-
-            RestaurantId = user.RestaurantId,
-            RoleId = user.RoleId,
-
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-
-            Email = user.Email,
-            MobileNumber = user.MobileNumber,
-
-            IsActive = user.IsActive,
-            CreatedAt = user.CreatedAt
-        };
+        _mapper = mapper;
     }
     
     public async Task<PagedResponse<UserListItemResponse>> GetUsersAsync(GetUsersRequest request)
@@ -176,5 +87,99 @@ public class UserService : IUserService
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
         };
+    }
+    
+    public async Task<UserResponse> CreateUserAsync(CreateUserRequest request)
+    {
+        var email = request.Email.Trim().ToLower();
+
+        var restaurantExists = await _restaurantRepository.AnyAsync(x =>
+            x.RestaurantId == request.RestaurantId &&
+            x.IsActive &&
+            !x.IsDeleted);
+
+        if (!restaurantExists)
+            throw new AppException("Restaurant not found or inactive.", ErrorType.NotFound);
+
+        var roleExists = await _roleRepository.AnyAsync(x =>
+            x.RoleId == request.RoleId);
+
+        if (!roleExists)
+            throw new AppException("Role not found.", ErrorType.NotFound);
+
+        var userAlreadyExists = await _userRepository.AnyAsync(x =>
+            x.Email == email &&
+            !x.IsDeleted);
+
+        if (userAlreadyExists)
+            throw new AppException("User already exists with this email.", ErrorType.Conflict);
+
+        var user = new User
+        {
+            RestaurantId = request.RestaurantId,
+            RoleId = request.RoleId,
+
+            FirstName = request.FirstName.Trim(),
+            LastName = request.LastName?.Trim(),
+
+            Email = email,
+            MobileNumber = request.MobileNumber?.Trim(),
+
+            PasswordHash = _passwordHasher.HashPassword(request.Password),
+
+            IsActive = true,
+            IsDeleted = false,
+
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _userRepository.AddAsync(user);
+        await _userRepository.SaveChangesAsync();
+
+        return _mapper.Map<UserResponse>(user);
+    }
+    
+    public async Task<UserResponse> UpdateUserAsync(UpdateUserRequest request)
+    {
+        var email = request.Email.Trim().ToLower();
+
+        var user = await _userRepository.FirstOrDefaultAsync(x =>
+            x.UserId == request.UserId &&
+            !x.IsDeleted);
+
+        if (user == null)
+            throw new AppException("User not found.", ErrorType.NotFound);
+
+        var restaurantExists = await _restaurantRepository.AnyAsync(x =>
+            x.RestaurantId == request.RestaurantId &&
+            x.IsActive &&
+            !x.IsDeleted);
+
+        if (!restaurantExists)
+            throw new AppException("Restaurant not found or inactive.", ErrorType.NotFound);
+
+        var roleExists = await _roleRepository.AnyAsync(x =>
+            x.RoleId == request.RoleId);
+
+        if (!roleExists)
+            throw new AppException("Role not found.", ErrorType.NotFound);
+
+        var emailAlreadyUsed = await _userRepository.AnyAsync(x =>
+            x.UserId != request.UserId &&
+            x.Email == email &&
+            !x.IsDeleted);
+
+        if (emailAlreadyUsed)
+            throw new AppException("Email is already used by another user.", ErrorType.Conflict);
+
+        _mapper.Map(request, user);
+
+        user.Email = email;
+        user.IsActive = request.IsActive;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _userRepository.SaveChangesAsync();
+
+        return _mapper.Map<UserResponse>(user);
     }
 }

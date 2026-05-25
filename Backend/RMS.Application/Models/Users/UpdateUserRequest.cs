@@ -1,7 +1,8 @@
-namespace RMS.Application.Models.Auth;
+namespace RMS.Application.Models.Users;
 
-public class UpsertUserRequest
+public class UpdateUserRequest
 {
+    public int UserId { get; set; }
     public int RestaurantId { get; set; }
     public int RoleId { get; set; }
 
@@ -11,7 +12,5 @@ public class UpsertUserRequest
     public string Email { get; set; } = string.Empty;
     public string? MobileNumber { get; set; }
     
-    public bool? IsActive { get; set; }
-
-    public string Password { get; set; } = string.Empty;
+    public bool IsActive { get; set; }
 }

@@ -5,6 +5,7 @@ namespace RMS.Application.Interfaces;
 
 public interface IUserService
 {
-    Task<UserResponse?> UpsertUserAsync(UpsertUserRequest request);
     Task<PagedResponse<UserListItemResponse>> GetUsersAsync(GetUsersRequest request);
+    Task<UserResponse> CreateUserAsync(CreateUserRequest request);
+    Task<UserResponse> UpdateUserAsync(UpdateUserRequest request);
 }

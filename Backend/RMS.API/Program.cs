@@ -1,11 +1,19 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RMS.API.Extensions;
+using RMS.API.Filters;
 using RMS.API.Middleware;
 using RMS.Application.Interfaces;
+using RMS.Application.Mappings;
+using RMS.Application.Models.MenuCategories;
+using RMS.Application.Models.MenuItems;
+using RMS.Application.Models.Users;
 using RMS.Application.Services;
+using RMS.API.Services;
+using RMS.Application.Validators.Users;
 using RMS.Infrastructure.Auth;
 using RMS.Infrastructure.Persistence;
 using RMS.Infrastructure.Repositories;
@@ -61,11 +69,27 @@ builder.Services.AddAuthorization(options =>
     options.AddRmsPermissionPolicies();
 });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILookupService, LookupService>();
+builder.Services.AddScoped<IMenuCategoryService, MenuCategoryService>();
+builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddAutoMapper(cfg => { }, typeof(UserMappingProfile).Assembly);
+
+// Validator Registration
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
+
+builder.Services.AddScoped<ValidationFilter<CreateUserRequest>>();
+builder.Services.AddScoped<ValidationFilter<UpdateUserRequest>>();
+builder.Services.AddScoped<ValidationFilter<CreateMenuCategoryRequest>>();
+builder.Services.AddScoped<ValidationFilter<UpdateMenuCategoryRequest>>();
+builder.Services.AddScoped<ValidationFilter<CreateMenuItemRequest>>();
+builder.Services.AddScoped<ValidationFilter<UpdateMenuItemRequest>>();
 
 // Generic Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RMS.API.Filters;
 using RMS.Application.Constants;
 using RMS.Application.Interfaces;
-using RMS.Application.Models.Auth;
 using RMS.Application.Models.Users;
 
 namespace RMS.API.Controllers;
@@ -18,22 +18,29 @@ public class UserController : BaseController
         _userService = userService;
     }
     
-    [HttpPost("upsertUser")]
+    [HttpPost("CreateUser")]
     [Authorize(policy : Permission.Users.Upsert)]
-    public async Task<IActionResult> UpsertUser(UpsertUserRequest request)
+    [ServiceFilter(typeof(ValidationFilter<CreateUserRequest>))]
+    public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
-        var result = await _userService.UpsertUserAsync(request);
+        var result = await _userService.CreateUserAsync(request);
 
-        if (result == null)
-        {
-            return BadRequestResponse("System user could not be created. User may already exist, or role/restaurant is invalid.");
-        }
+        return OkResponse(result, "System user created successfully.");
+    }
+    
+    [HttpPost("UpdateUser")]
+    [Authorize(policy : Permission.Users.Upsert)]
+    [ServiceFilter(typeof(ValidationFilter<UpdateUserRequest>))]
+    public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
+    {
+        var result = await _userService.UpdateUserAsync(request);
 
         return OkResponse(result, "System user created successfully.");
     }
     
     [HttpPost("getUsers")]
     [Authorize(Policy = Permission.Users.View)]
+    [ServiceFilter(typeof(ValidationFilter<CreateUserRequest>))]
     public async Task<IActionResult> GetUsers(GetUsersRequest request)
     {
         var result = await _userService.GetUsersAsync(request);
