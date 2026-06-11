@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using RMS.Application.Exceptions;
 using RMS.Application.Interfaces;
 

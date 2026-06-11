@@ -5,10 +5,10 @@ export const apiRoutes = {
     },
   
     menuCategories: {
-      getAll: "/MenuCategories",
-      getById: (id: number) => `/menu-categories/${id}`,
-      create: "/menu-categories",
-      update: (id: number) => `/menu-categories/${id}`,
-      delete: (id: number) => `/menu-categories/${id}`,
+      getAll: "/MenuCategory",
+      getById: (id: number) => `/MenuCategory/${id}`,
+      create: "/MenuCategory/Create",
+      update: "/MenuCategory/Update",
+      delete: (id: number) => `/MenuCategory/${id}`,
     },
   };

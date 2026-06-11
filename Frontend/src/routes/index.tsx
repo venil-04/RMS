@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../features/auth/pages/Login';
 import Dashboard from '../pages/Dashboard';
 import UserManagement from '../features/users/pages/UserManagement';
+import MenuCategoryListPage from '../features/menuCategories/pages/MenuCategoryListPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
 import { MainLayout } from '../components/layout/MainLayout';
@@ -23,6 +24,7 @@ export const AppRoutes = () => {
           <Route path="/" element={<Navigate to="/users" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<UserManagement />} />
+          <Route path="/menu-categories" element={<MenuCategoryListPage />} />
           
           <Route path="/super-admin/dashboard" element={<Placeholder title="Super Admin Dashboard" />} />
           <Route path="/admin/dashboard" element={<Placeholder title="Admin Dashboard" />} />

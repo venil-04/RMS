@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RMS.Domain.Entities;
+﻿namespace RMS.Domain.Entities;
 
 public partial class User
 {

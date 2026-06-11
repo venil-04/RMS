@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace RMS.Application.Models.MenuCategories;
 
 public class CreateMenuCategoryRequest

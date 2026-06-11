@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RMS.Application.Constants;
 using RMS.Application.Interfaces;
 
 namespace RMS.API.Controllers;
